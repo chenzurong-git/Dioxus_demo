@@ -1,0 +1,13 @@
+# 使用 USTC 镜像加速 crates.io 下载；如果镜像访问不了，删除本文件即可恢复官方源
+[source.crates-io]
+replace-with = "ustc"
+
+[source.ustc]
+registry = "sparse+https://mirrors.ustc.edu.cn/crates.io-index/"
+
+# 无 Visual Studio 时使用 GNU 工具链（MinGW），用 gcc 做链接器
+[target.x86_64-pc-windows-gnu]
+linker = "gcc"
+
+[target.i686-pc-windows-gnu]
+linker = "gcc"

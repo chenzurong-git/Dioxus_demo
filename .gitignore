@@ -1,0 +1,13 @@
+# 构建产物（大目录，务必忽略）
+/target
+/.toolchain
+/w64devkit/
+
+# 编辑器 / 系统文件
+.idea/
+.vscode/
+Thumbs.db
+Desktop.ini
+.DS_Store
+*.swp
+*.swo

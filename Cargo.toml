@@ -1,0 +1,11 @@
+[package]
+name = "dioxus-demo"
+version = "0.1.0"
+edition = "2021"
+description = "Dioxus 桌面应用示例"
+
+[dependencies]
+dioxus = { version = "0.7", features = ["desktop"] }
+
+[profile.release]
+opt-level = 3
