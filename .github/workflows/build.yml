@@ -37,6 +37,15 @@ jobs:
             Write-Host "::warning::WebView2Loader.dll 未生成，运行 exe 可能报缺 DLL"
           }
 
+      - name: Install NSIS
+        run: choco install nsis -y --no-progress
+
+      - name: Build NSIS installer
+        shell: pwsh
+        run: |
+          $v = (Select-String -Path Cargo.toml -Pattern '^version = "(.+)"').Matches[0].Groups[1].Value
+          makensis /DAPP_VERSION=$v packaging\installer.nsi
+
       - uses: actions/upload-artifact@v4
         with:
           name: dioxus-demo-windows
