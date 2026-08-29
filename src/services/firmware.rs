@@ -20,6 +20,7 @@ impl FirmwareService {
     }
 
     pub fn upload(&self, serial: &str, name: &str, data: &[u8]) -> Result<(), String> {
+        let name = safe_name(name)?;
         let d = self.device_dir(serial);
         fs::create_dir_all(&d).map_err(|e| e.to_string())?;
         fs::write(d.join(name), data).map_err(|e| e.to_string())
@@ -51,12 +52,21 @@ impl FirmwareService {
     }
 
     pub fn delete(&self, serial: &str, name: &str) -> Result<(), String> {
+        let name = safe_name(name)?;
         fs::remove_file(self.device_dir(serial).join(name)).map_err(|e| e.to_string())
     }
 
     pub fn path(&self, serial: &str, name: &str) -> PathBuf {
-        self.device_dir(serial).join(name)
+        self.device_dir(serial).join(safe_name(name).unwrap_or_default())
     }
+}
+
+fn safe_name(name: &str) -> Result<&str, String> {
+    let path = Path::new(name);
+    if name.trim().is_empty() || path.file_name().and_then(|n| n.to_str()) != Some(name) {
+        return Err("固件文件名无效".into());
+    }
+    Ok(name)
 }
 
 #[allow(dead_code)]

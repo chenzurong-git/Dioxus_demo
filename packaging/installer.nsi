@@ -4,6 +4,9 @@
 !ifndef APP_VERSION
   !define APP_VERSION "0.1.0"
 !endif
+!ifndef DIST_DIR
+  !define DIST_DIR "${__FILEDIR__}\..\dist"
+!endif
 
 !define APP_NAME "Open Workbench"
 !define APP_EXE "dioxus-demo.exe"
@@ -33,8 +36,8 @@ SetCompressor /SOLID lzma
 Section "Open Workbench（必需）" SecMain
   SectionIn RO
   SetOutPath "$INSTDIR"
-  File "${__FILEDIR__}\..\dist\dioxus-demo.exe"
-  File "${__FILEDIR__}\..\dist\WebView2Loader.dll"
+  File "${DIST_DIR}\dioxus-demo.exe"
+  File /nonfatal "${DIST_DIR}\WebView2Loader.dll"
 
   WriteUninstaller "$INSTDIR\Uninstall.exe"
 

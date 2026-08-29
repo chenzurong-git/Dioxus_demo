@@ -52,7 +52,8 @@ jobs:
             if (-not $exe) { throw "未找到 makensis，请确认 choco install nsis 成功" }
             $makensis = $exe
           }
-          & $makensis /DAPP_VERSION=$v packaging\installer.nsi
+          $dist = (Resolve-Path dist).Path
+          & $makensis "/DAPP_VERSION=$v" "/DDIST_DIR=$dist" packaging\installer.nsi
 
       - uses: actions/upload-artifact@v4
         with:

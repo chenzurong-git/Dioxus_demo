@@ -102,11 +102,9 @@ fn dispatch(line: &str, token: &Arc<Mutex<String>>) -> String {
     let method = v.get("method").and_then(|m| m.as_str()).unwrap_or("").to_string();
     let params = v.get("params").cloned().unwrap_or(serde_json::Value::Null);
 
-    if let Some(t) = params.get("token").and_then(|x| x.as_str()) {
-        let stored = token.lock().unwrap();
-        if !stored.is_empty() && t != stored.as_str() {
-            return json_err(id, -32000, "无效的访问令牌");
-        }
+    let stored = token.lock().unwrap();
+    if !stored.is_empty() && params.get("token").and_then(|x| x.as_str()) != Some(stored.as_str()) {
+        return json_err(id, -32000, "无效的访问令牌");
     }
 
     match method.as_str() {

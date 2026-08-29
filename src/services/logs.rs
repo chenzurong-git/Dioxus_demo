@@ -40,12 +40,14 @@ impl LogService {
     }
 
     pub fn read(&self, name: &str, max_bytes: u64) -> Result<String, String> {
+        let name = safe_log_name(name)?;
         let data = fs::read(self.dir.join(name)).map_err(|e| e.to_string())?;
         let start = data.len().saturating_sub(max_bytes as usize);
         Ok(String::from_utf8_lossy(&data[start..]).into_owned())
     }
 
     pub fn delete(&self, name: &str) -> Result<(), String> {
+        let name = safe_log_name(name)?;
         fs::remove_file(self.dir.join(name)).map_err(|e| e.to_string())
     }
 
@@ -53,4 +55,11 @@ impl LogService {
     pub fn debug_size(&self) -> String {
         fmt_size(self.max_file_size)
     }
+}
+
+fn safe_log_name(name: &str) -> Result<&str, String> {
+    if PathBuf::from(name).file_name().and_then(|n| n.to_str()) != Some(name) || !name.ends_with(".log") {
+        return Err("日志文件名无效".into());
+    }
+    Ok(name)
 }
